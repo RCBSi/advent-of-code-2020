@@ -1,0 +1,3 @@
+with open('day3.txt', 'r') as file:
+    _input = [x.strip() for x in file.readlines()]
+print("part 1":sum([_input[i][3*i%31]=='#' for i in range(0,len(_input))]))
