@@ -1,0 +1,97 @@
+import re
+with open('day04.txt', 'r') as file:
+    f = file.read().split('\n\n')
+
+def is_valid_pass(l:list):
+    valid = 1
+    for i in l:
+        a = i.split(':')[0]
+        b = i.split(':')[1]
+        if (a == 'byr'):
+            if int(b) < 1920:
+                valid = 0
+            if int(b) > 2002:
+                valid = 0
+        if (a == 'iyr'):
+            if int(b) < 2010:
+                valid = 0
+            if int(b) > 2020:
+                valid = 0
+        if (a == 'eyr'):
+            if int(b) < 2020:
+                valid = 0
+            if int(b) > 2030:
+                valid = 0
+        if (a == 'hgt'):
+            u = b[-2:]
+            n = b[:-2]
+            if not (u in ('cm','in')):
+                valid = 0
+            if u == 'cm':
+                if int(n) < 150:
+                    valid = 0
+                if int(n) > 193:
+                    valid = 0
+            if u == 'in':
+                if int(n) < 59:
+                    valid = 0
+                if int(n) > 76:
+                    valid = 0
+        if (a == 'hcl'):
+            if not (b[0] == '#'):
+                valid = 0
+            else:
+                if re.match('[a-f0-9]{6}',b[1:]) == None:
+                    valid = 0
+        if (a == 'ecl'):
+            if not(b in ('amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth')):
+                valid = 0
+        if (a == 'pid'):
+            if re.match('[0-9]{9}',b) == None:
+                valid = 0
+    return valid
+
+
+def sort_and_return(l:list):
+    l.sort()
+    return l
+
+def dot(l:list, m:list):
+    return sum([int(l[i])*int(m[i]) for i in range(0,len(l))])
+
+def lor(l:list, m:list):
+    return [l[i] or m[i] for i in range(0,len(l))]
+
+f2 = [sort_and_return([y for y in x.split() if y.split(':')[0] != 'cid']) for x in f]
+f3 = [y for y in f2 if len(y) == 7]
+f4 = [is_valid_pass(y) for y in f3]
+
+x_byr_low = [int(x[0].split(':')[1]) < 1920 for x in f3]
+x_hcl = [re.match('[a-f,0-9]{6}',x[3].split(':')[1][1:])==None for x in f3]
+x_hcl_init = [not(x[3].split(':')[1][0]=='#') for x in f3]
+x_byr_high = [int(x[0].split(':')[1]) > 2002 for x in f3]
+x_pid = [re.match('[0-9]{9}',x[6].split(':')[1])==None for x in f3]
+x_ecl = [not(x[1].split(':')[1] in ('amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth')) for x in f3]
+x_eyr_h = [int(x[2].split(':')[1]) > 2030 for x in f3]
+x_eyr_l = [int(x[2].split(':')[1]) < 2020 for x in f3]
+x_iyr_h = [int(x[5].split(':')[1]) > 2020 for x in f3]
+x_iyr_l = [int(x[5].split(':')[1]) < 2010 for x in f3]
+x_dates = lor(lor(lor(x_eyr_l, x_eyr_h), lor(x_byr_low, x_byr_high)),lor(x_iyr_l, x_iyr_h))
+x_hgt_unit = [x[4].split(':')[1][-2:] not in ('cm','in') for x in f3]
+x_hgt_cm_h= [x[4].split(':')[1][-2:] == 'cm' and int(x[4].split(':')[1][:-2]) > 193 for x in f3]
+x_hgt_cm_l= [x[4].split(':')[1][-2:] == 'cm' and int(x[4].split(':')[1][:-2]) < 150 for x in f3]
+x_hgt_in_h= [x[4].split(':')[1][-2:] == 'in' and int(x[4].split(':')[1][:-2]) > 76 for x in f3]
+x_hgt_in_l= [x[4].split(':')[1][-2:] == 'in' and int(x[4].split(':')[1][:-2]) < 59 for x in f3]
+x_hgt = lor(lor(x_hgt_cm_l, x_hgt_unit),x_hgt_in_h)
+x_all = lor(lor(lor(lor(x_pid, x_dates),x_ecl),lor(x_hcl,x_hcl_init)),x_hgt)
+sum(x_all)
+
+print("part 0: ", [x.count(':') for x in f].count(8))
+print("part 1: ", [x.replace('cid:','').count(':') for x in f].count(7))
+print("part 2: ", sum(f4))
+print("part 2 details  sum(x_byr_low) ",  sum(x_byr_low))
+print("part 2 details  sum(x_byr_high)",  sum(x_byr_high))
+print("part 2 details  sum(x_hcl)     ",  sum(x_hcl))
+print("part 2 details  dot(x_byr_high, x_hcl)",  dot(x_byr_high, x_hcl))
+print("part 2 details  sum(lor(x_pid, x_byr_high))", sum(lor(x_pid, x_byr_high)))
+print("part 2 other way ",len(f3)- sum(x_all))
