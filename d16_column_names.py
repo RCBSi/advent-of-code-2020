@@ -83,4 +83,8 @@ breakpoint()
 #True
 # so the invalid function is simple: if int(x) < global_min or int(x) > global_max]
 # Otherwise, the invalid function would be: "if x in ev"
-# NB: answ = [0,1,2,3,4,5]
+# NB: 
+# answ = [0,1,2,3,4,5]
+# It certainly could happen that the forcing process would stop before sum(len(x)) for x in cf = len(cf), i.e., before cf is a function.
+#   The general problem of finding a function in a matrix (a "generalized diagonal in a binary matrix) can be harder; reduces to finding a perfect matching in the bipartite graph of Fields and Classes.
+
