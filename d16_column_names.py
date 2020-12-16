@@ -75,4 +75,12 @@ multiplicands = [int(tickets[0].split(',')[i]) for i in answer_fields]
 print("part 2: ",numpy.prod(multiplicands))
 breakpoint()
 
+#NB: 
+#[i for i in range(global_min, global_max+1)] == ev
+#TRUE
+#nv = [i for i in range(global_min, global_max+1) if not ever_valid(i, classes)]
+#nv == []
+#True
+# so the invalid function is simple: if int(x) < global_min or int(x) > global_max]
+# Otherwise, the invalid function would be: "if x in ev"
 # NB: answ = [0,1,2,3,4,5]
