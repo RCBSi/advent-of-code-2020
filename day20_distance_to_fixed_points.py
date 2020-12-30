@@ -121,4 +121,6 @@ for i in range((max(d0.values()) + 1)), j likewise:
 
 breakpoint()
 
-
+'''
+The pseudocode has a problem that edges can flip. Solution: decide right at the beginning to always report an edge as the min of itself and its flipped value.
+'''
