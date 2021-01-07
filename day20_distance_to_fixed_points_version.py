@@ -38,15 +38,12 @@ r0,r1 = (range((max(d0.values()) + 1)), range(len(f[oc[0]]) - 2))
 mat = numpy.array([['' for y in r0 for y1 in r1] for x in r0 for x1 in r1]) # numpy.array(mat)[10][50] == numpy.array(mat)[(10,50)]
 tl,tij = ([(x,y) for y in r0 for x in r0], [(x,y) for y in r1 for x in r1])
 de = {}
-breakpoint()
-for ti in [ti for ti in f.values()]+ [numpy.array([[y for y in x] for x in zip(*ti)]) for ti in f.values()]:
-#    for ti in [ti0, numpy.array([[y for y in x] for x in zip(*ti0)])] for ti0 in f.values():
-    de = de|{''.join(ti[:, 0])+str(1+dj)+''.join(ti[ 0, :])+str(1+di) :ti[(di,dj)] for (di,dj) in tij}
-    de = de|{''.join(ti[:,-1])+str(8-dj)+''.join(ti[ 0, :])+str(1+di) :ti[(di,dj)] for (di,dj) in tij}
-    de = de|{''.join(ti[:,-1])+str(8-dj)+''.join(ti[-1, :])+str(8-di) :ti[(di,dj)] for (di,dj) in tij}
-    de = de|{''.join(ti[:, 0])+str(1+dj)+''.join(ti[-1, :])+str(8-di) :ti[(di,dj)] for (di,dj) in tij}
-    
-breakpoint()
+for ind in f:
+    fl = [f[ind], f[ind][:,::-1], f[ind][::-1,::-1], f[ind][::-1,:]]
+    fz = [numpy.array([[y for y in x] for x in zip(*x)]) for x in fl]
+    for ti in fl+fz:
+        de = de|{''.join(soi(ti[:, 0]))+str(1+dj)+''.join(soi(ti[ 0, :]))+str(1+di) :ti[(di+1,dj+1)] for (di,dj) in tij}
+
 for i,j in tl: # here, we can restict our search to one vertical and one horizontal edge, but in de we don't know oriendation.
     for (di,dj) in tij:
         if j < 6:
@@ -57,9 +54,7 @@ for i,j in tl: # here, we can restict our search to one vertical and one horizon
             horizontal = ''.join(we[''.join(soi([pm[(i,j)],pm[(i+1,j)]]))])+str(8-di)
         else:
             horizontal = ''.join(we[''.join(soi([pm[(i,j)],pm[(i-1,j)]]))])+str(1+di)
-        mat[(i*(len(f[oc[0]]) - 2)+di,j*(len(f[oc[0]]) - 2)+dj)] = de[vertical+horizontal]
-
-breakpoint()
+        mat[(i*(len(f[oc[0]]) - 2)+di,j*(len(f[oc[0]]) - 2)+dj)] = de[vertical+horizontal] #ind / pm[(i,j)] is unnecessaary, except that I am debugging.
 
 seas = ['                  # ','#    ##    ##    ###',' #  #  #  #  #  #   '] # Sea Serpent filter.
 sealist = [(i,j) for i in range(len(seas)) for j in range(len(seas[0])) if seas[i][j] == '#']
