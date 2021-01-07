@@ -123,4 +123,17 @@ breakpoint()
 
 '''
 The pseudocode has a problem that edges can flip. Solution: decide right at the beginning to always report an edge as the min of itself and its flipped value.
+
+From each tile, create a dictionary: 
+D = the color of the node which is in tile T, and which has distance d0 to edge e0, d1 to edge e1, d2 to edge e2, d3 to e3, is '#'. 
+That's four edges, four distances.
+wheen we want to color (i*8 + di, j*8 + dj), we note that this place has distance di from we[(i,j)(i-1,j)], distance 8-di from we[(i,j)(i+1,j)], 
+distance dj from we[(i,j)(i,j-1)] and distance 8-dj from we[(i,j)(i,j+1)]. Of these, some may not exist, i.e., if i-1 < 0 or i+1=8. 
+We want to look up the color of the element in tile ti which has these distances. 
+One solution would be to create D after pm has been created, and throw away the edges that are at the endge of the final matrix. 
+Or we could define D to accept any number 2-4 of edges :-) 4-choose-2 = 6; D will be 6-times bigger, but now the color of (di,dj) is a *lookup* and not a search.
+
+
+
+
 '''
